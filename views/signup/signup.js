@@ -21,8 +21,9 @@ async function signup(event) {
     if (res.data.alreadyexisting === false) {
       //if user not existed then only creat new user
       console.log("succesfully created new user");
+      window.alert('Successfully User Signup')
     } else {
-      throw new Error("failed to Signup , account is already exist");
+      window.alert("User Already Exists,Please Login")
     }
   } catch (err) {
     console.log(err);
