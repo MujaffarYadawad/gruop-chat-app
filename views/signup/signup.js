@@ -1,22 +1,22 @@
-console.log('hi chats');
+const url = `http://localhost:3000`;
+
 async function signup(event) {
   event.preventDefault();
+
   const name = event.target.name.value;
   const email = event.target.email.value;
   const phonenumber = event.target.phonenumber.value;
   const password = event.target.password.value;
+  
   const signupDetails = {
     name,
     email,
     phonenumber,
     password,
   };
-  console.log(signupDetails);
+ 
   try {
-    const res = await axios.post(
-      `http://localhost:3000/user/postUser`,
-      signupDetails
-    );
+    const res = await axios.post(`${url}/user/postUser`,signupDetails);
    
     if (res.data.alreadyexisting === false) {
       //if user not existed then only creat new user
