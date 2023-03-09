@@ -6,12 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="./index.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+  <script src="./index.js"></script>
 </head>
 <body>
-  <form class="product-form" method="POST" onsubmit="chatData(event)">
+  <form class="product-form"  onsubmit="sendMessage(event)">
     <div class="form-control">
       <label for="message"></label>
-      <input id="message" type="message" name="message">
+      <input name="message" id="message" type="message" >
     </div>
     <button class="btn" type="submit" style="float: right">Send</button>
   

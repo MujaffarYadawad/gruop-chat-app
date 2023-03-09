@@ -15,7 +15,8 @@ async function login(event) {
     const res = await axios.post(`${url}/user/postLogin`, loginObj);
     console.log(res);
     if(res.data.success === true){
-      console.log('jwt ss')
+      localStorage.setItem("token", res.data.token);
+      window.location.href = "../index/index.html";
     }
   } catch (err) {
     console.log(err);

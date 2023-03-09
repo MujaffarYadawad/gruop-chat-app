@@ -22,6 +22,8 @@ async function signup(event) {
       //if user not existed then only creat new user
       console.log("succesfully created new user");
       window.alert('Successfully User Signup')
+       window.location.href = "../login/login.html";
+      
     } else {
       window.alert("User Already Exists,Please Login")
     }
