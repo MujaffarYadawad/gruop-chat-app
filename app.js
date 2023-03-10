@@ -20,8 +20,9 @@ const Message = require('./models/message')
 app.use('/user', userRoutes);
 app.use('/message', messageRoutes);
 
-Message.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-User.hasMany(Message);  
+User.hasMany(Message); 
+Message.belongsTo(User);
+ 
  
 sequelize
   //.sync({ force: true })

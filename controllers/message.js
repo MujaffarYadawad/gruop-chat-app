@@ -14,6 +14,20 @@ exports.postMessage = async(req, res, next) =>{
   } catch (err) {
     console.log(err)
   }
-
 }
+
+exports.getMessage = async (req, res, next) => {
+  try {
+    console.log('get m')
+
+     const message = await Message.findAll();
+     //console.log('message-->',message);
+     res.json(message)
+  } catch (err) {
+    console.log(err)
+    
+  }
+ 
+}
+
 

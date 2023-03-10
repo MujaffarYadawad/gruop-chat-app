@@ -41,10 +41,10 @@ exports.postLogin = async (req, res) => {
  
   try {
     const user = await User.findAll({ where : { email : email}});
-    console.log('email -->', user.length)
+   // console.log('email -->', user.length)
     if(user.length !== 0){
       const res2 = await User.findAll({where : { password : password}})
-      console.log('password-->', res2)
+     // console.log('password-->', res2)
       bcrpt.compare(password, user[0].password, async function (err, result) {
         if(err){
           console.log(err);

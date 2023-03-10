@@ -53,4 +53,10 @@
   color: white;
 }
 
+.chat-msg{
+  display: block;
+  position: absolute;
+  right: 110px;
+  
+}
  

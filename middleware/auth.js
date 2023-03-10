@@ -11,8 +11,8 @@ const authenticate  = async (req, res, next) => {
     const user = jwt.verify(token, process.env.TOKEN_SECRET);
     console.log("user-->", user);
 
-    const user1 = await User.findByPk(user.id);
-    console.log("user1__.", user1);
+    const user1 = await User.findByPk(user.id); // userId
+    //console.log("user1__.", user1);
     //const user1 = await User.findAll({where : {user: user}})
        req.user = user1;
 
