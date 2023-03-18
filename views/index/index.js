@@ -1,64 +1,82 @@
 //console.log('index chats')
 
- 
 const url = `http://localhost:3000`;
 
 
 const token = localStorage.getItem('token')
 //console.log('token--', token)
-  //const parentNode = document.getElementById("chatMsg");
-
-
-     
-
-window.addEventListener("DOMContentLoaded",   getMsg)
-
-async function showMsgOnScreen(data) {
-  //   console.log('data', data )
-  //  for (const key in data) {
-  //   // console.log( data[key].message);
-  //    let i = data[key].message;
-  //    console.log(i)
-  //      const parentNode = document.getElementById("chat-msg");
-  //      const childHTML = `<li class="chat-msg-li">${i}</li>`;
-  //      parentNode.innerHTML += childHTML;
-  //  }
-  //  const parentNode = document.getElementById("chatMsg");
-  //  parentNode.innerHTML = " ";
-
-  // const chatMsgLi = document.createElement("li");
-  // chatMsgLi.classList.add("chat-msg-li");
-  // chatMsgLi.textContent = data.message;
-  // parentNode.appendChild(chatMsgLi);
-
-  const parentNode = document.getElementById("chatMsg");
-  const childHTML = `<li class="chat-msg-li">${data.message}</li>`;
-  parentNode.innerHTML= parentNode.innerHTML + childHTML;
-}
-
-async function getMsg(){
-  //console.log(parentNode);
-   
-   try {
-   
-     const res = await axios.get(`${url}/message/getMessage`, {
-       headers: { Authorization: token },
-     });
-
-     console.log("getMessges-->", res);
-     
-
-     for (let i = 0; i < res.data.length; i++) {
-       showMsgOnScreen(res.data[i]);
-     }
-   } catch (err) {
-     console.log(err);
-   }
  
+window.addEventListener("DOMContentLoaded",  () =>  {
+  getMsg();
+
+})
+
+// getmsgs
+async function getMsg(){
+     const parentNode = document.getElementById("chatMsg");
+     parentNode.innerHTML = " ";
+   
+      
+    const msgArray = JSON.parse(localStorage.getItem("msgs"))
+    // console.log(msgArray)
+     if(!msgArray){
+          try {
+            const res = await axios.get(`${url}/message/getMessage`, {
+              headers: { Authorization: token },
+            });
+
+            console.log(res);
+            const response = res.data.slice( res.data.length - 10, res.data.length); // slice will take top 10 elment 0r recennt 0r last 10
+            console.log(response);
+            const messages = JSON.stringify(response);
+            console.log(messages);
+            localStorage.setItem("msgs", messages);
+
+            for (let i = 0; i < res.data.length; i++) {
+              showMsgOnScreen(res.data[i]);
+            }
+            
+          } catch (err) {
+            console.log(err);
+          }
+  
+      }
+      else{
+         for (let i = 0; i < msgArray.length; i++) {
+              showMsgOnScreen( msgArray[i]);
+      }
+   }
 }
 
+// alll msg , insures new msg will get
+async function allMsgs() {
+  try {
+    const oldMsgArray = JSON.parse(localStorage.getItem("msgs"));
+    console.log(oldMsgArray)
+    const lastMsgId = oldMsgArray[oldMsgArray.length - 1].id  || 0;
+    
+    console.log(lastMsgId)
+
+      const res = await axios.get(`${url}/message/getMessage?id=${lastMsgId}`, { headers: { Authorization: token } });
+    console.log(res.data);
+    const allMsgs = oldMsgArray.concat(res.data);
+    console.log(allMsgs);
+    if (allMsgs.length > 10) {
+      const msgToSaveInLs = allMsgs.slice(allMsgs.length - 10, allMsgs.length);
+      localStorage.setItem("msgs", JSON.stringify(msgToSaveInLs));
+    } else {
+      localStorage.setItem("msgs", JSON.stringify(allMsgs));
+    }
+
+    getMsg();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// send msg
 async function sendMessage(event){
-  console.log('index ffunct')
+  
   event.preventDefault();
   const msg = event.target.message.value;
   const msgs = {
@@ -69,21 +87,23 @@ async function sendMessage(event){
     { headers: { Authorization: token } 
   })
    event.target.message.value = ""; 
-    console.log(res)
-     
+    console.log(res);
+
+   allMsgs();
+ 
 
   } catch (err) {
     console.log(err)
-    
   
 }
 }
 
- setInterval(()=> {
-    const parentNode = document.getElementById("chatMsg");
-    parentNode.innerHTML = " ";
-   getMsg()
- }, 3000)
+// show msgs on screen
+ async function showMsgOnScreen(data) {
+   const parentNode = document.getElementById("chatMsg");
+   const childHTML = `<li class="chat-msg-li">${data.name}: ${data.message}</li>`;
+   parentNode.innerHTML = parentNode.innerHTML + childHTML;
+ }
  
 
 
