@@ -36,33 +36,32 @@ exports.postUser = async (req, res, next) => {
 
 exports.postLogin = async (req, res) => {
  
-  const email = req.body.email;
-  const password = req.body.password;
- 
-  try {
-    const user = await User.findAll({ where : { email : email}});
-   // console.log('email -->', user.length)
-    if(user.length !== 0){
-      const res2 = await User.findAll({where : { password : password}})
-     // console.log('password-->', res2)
-      bcrpt.compare(password, user[0].password, async function (err, result) {
-        if(err){
-          console.log(err);
+    const {email,password} = req.body
+    try{
+        const usercheck = await User.findOne({where:{email:email}})
+        if(!usercheck){
+            return res.status(404).json({success:false,message:'user not found'})
         }
-        if(result === true){
-          res.json({ success : true, token : generateAcceessToken(user[0].id, user[0].name)})
-        }else{
-          res.json({password: "incorret"})
+        const userPwCheck = await bcrpt.compare(password,usercheck.password)
+        if(!userPwCheck){
+            return res.status(401).json({success:false,message:'wrong password'})
         }
 
-      })
-    }
-    else{
-      res.status(404).json({ error: "No User Exist", success: false }); 
-    }
+        res.set("authToken", generateAcceessToken(usercheck.id));
+        return res.status(200).json({success:true,message:'user logged in successful',data:usercheck, token:generateAcceessToken(usercheck.id)})
     
   } catch (err) {
     console.log(err)
   }
 
+};
+
+
+exports.getAlluser = async (req, res) => {
+  try {
+    let users = await User.findAll();
+    res.json(users);
+  } catch (err) {
+    console.log(err);
+  }
 };

@@ -1,5 +1,7 @@
 const url = `http://localhost:3000`;
 
+localStorage.clear();
+
 async function login(event) {
   console.log("funciton login");
   event.preventDefault();
@@ -12,10 +14,11 @@ async function login(event) {
   };
 
   try {
-    const res = await axios.post(`${url}/user/postLogin`, loginObj);
-    console.log(res);
-    if(res.data.success === true){
-      localStorage.setItem("token", res.data.token);
+    const userLoginRes = await axios.post(`${url}/user/postLogin`, loginObj);
+    console.log(userLoginRes);
+    if (userLoginRes.data.success === true) {
+      localStorage.setItem("username", userLoginRes.data.data.name);
+      localStorage.setItem("token", userLoginRes.data.token);
       window.location.href = "../index/index.html";
     }
   } catch (err) {

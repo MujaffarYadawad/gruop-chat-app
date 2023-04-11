@@ -1,47 +1,74 @@
 const User = require('../models/user');
 const Message = require('../models/message');
-const {Op} = require('sequelize')
+ const Group = require('../models/group');
 
-exports.postMessage = async(req, res, next) =>{
-  const msg = req.body.msg;
-  //const user = req.body.userId
- console.log('msg-->', msg)
- 
-
+exports.addMsg = async (req, res) => {
   try {
-    console.log('message--')
-    console.log('user details--',req.user)
-        const response = await req.user.createMessage({ message:msg, name:req.user.name, userId: req.user.id  });
-        console.log(response)
-         res.status(201).json({ message: response });
-    
-  } catch (err) {
-    console.log(err)
-  }
-}
+    const userId = req.user.id;
+    const { msg } = req.body;
+    //const groupId = req.params.id
+    const groupId = Number(req.params.id);
+    console.log(req.params.id, "group id here -->");
+    console.log(msg, userId);
+    const result = await Message.create({
+      message: msg,
+      userId: userId,
+      groupId: groupId,
+      
+    });
 
-exports.getMessage = async (req, res, next) => {
+    console.log(result);
+    return res.status(201).json({ succes: true, message: "msg stored in database successfully" });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ succes: false, message: "unable to store msg in database" });
+  }
+};
+
+exports.getMsg = async (req, res) => {
   try {
-    
-    const lastMsgId = req.query.id || 0;
-    console.log('lstmsgid -->',lastMsgId)
-     const message = await Message.findAll( {
-      includes :{ 
-        model : User,
-        as : 'user',
-        attributes: ['name']
-      },
-      where :{ id: { [Op.gt] : lastMsgId}  }
-      }
-    );
-   //  console.log('message-->',message);
-    
-     res.json(message)
+    const groupId = req.params.id;
+    const allMsgs = await Message.findAll({
+      where: { groupId: groupId },
+      attributes: ["id", "message"],
+      include: [{ model: User, attributes: ["name"] }],
+    });
+    return res.status(200).json({ message: allMsgs });
   } catch (err) {
-    console.log(err)
-    
+    console.log(err);
+    return res.status(401).json({ msg: "failed at get msg controller " });
   }
- 
-}
+};
 
+exports.getMsgOnLimit = async (req, res) => {
+  try {
+    const groupId = req.query.groupId;
+    const msgSkipNum = Number(req.query.id);
+    console.log(typeof groupId);
+    console.log(typeof msgSkipNum);
+    //console.log(msgSkipNum)
+    console.log(msgSkipNum, "to skip");
+    if (msgSkipNum >= 10) {
+      const skip = msgSkipNum - 10;
+      let offset = skip;
+      const allMsgs = await Msg.findAll({
+        where: { groupId: groupId },
+        attributes: ["id", "message"],
+        offset: offset,
+        include: [{ model: User, attributes: ["name"] }],
+      });
+      return res.status(200).json({ message: allMsgs });
+    }
+    const allMsgs = await Message.findAll({
+      where: { groupId: groupId },
+      attributes: ["id", "message"],
+      include: [{ model: User, attributes: ["name"] }],
+    });
 
+    return res.status(200).json({ message: allMsgs });
+  } catch (err) {
+    console.log(err);
+    return res.status(401).json({ message: "something went wrong" });
+  }
+};

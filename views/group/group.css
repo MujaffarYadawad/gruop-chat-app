@@ -1,0 +1,76 @@
+.form-control {
+  margin: 1rem 0;
+
+}
+
+.form-control label,
+.form-control input,
+.form-control textarea {
+  display: block;
+  width: 100%;
+
+}
+
+.form-control input,
+.form-control textarea {
+  border: 1px solid #a1a1a1;
+  font: inherit;
+  border-radius: 15px;
+  position: absolute;
+  top: 430px;
+
+}
+
+.form-control input:focus,
+.form-control textarea:focus {
+  outline-color: #00695c;
+}
+
+.product-form {
+  width: 33rem;
+  line-height: 2;
+  max-width: 100%;
+  margin: auto;
+  display: block;
+  position: absolute;
+  margin-left: 660px;
+  line-height: 2.5;
+
+}
+
+.btn {
+  line-height: 2.5;
+  padding: 0.25rem 1rem;
+  text-decoration: none;
+  font: inherit;
+  border: 1px solid #00695c;
+  color: #00695c;
+  background: white;
+  border-radius: 15px;
+  cursor: pointer;
+  position: absolute;
+  margin-left: 535px;
+  top: 430px;
+
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #00695c;
+  color: white;
+}
+
+.madhu {
+  display: block;
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  font-size: 18px;
+  border: 1px solid #c5baba;
+  padding: 5px;
+  margin-left: 650px;
+  width: 600px;
+  height: 540px;
+  overflow: scroll;
+
+}

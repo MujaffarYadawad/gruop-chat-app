@@ -5,6 +5,8 @@ const messageControllers = require('../controllers/message')
 
 const router = express.Router();
 
-router.post('/postMessage', Authorization.authenticate ,messageControllers.postMessage);
-router.get('/getMessage', Authorization.authenticate ,messageControllers.getMessage);
+router.post('/tostore/:id', Authorization.authenticate , messageControllers.addMsg);
+router.get('/toget/:id', Authorization.authenticate , messageControllers.getMsg);
+router.get('/localmsg', Authorization.authenticate , messageControllers.getMsgOnLimit);
+
 module.exports = router;
